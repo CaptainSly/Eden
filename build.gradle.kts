@@ -1,11 +1,16 @@
+import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+import org.gradle.kotlin.dsl.withType
+
 plugins {
     java
     application
     id("org.openjfx.javafxplugin") version "0.1.0"
+    id("com.github.johnrengelman.shadow") version "7.0.0"
 }
 
 repositories {
     // Use Maven Central for resolving dependencies.
+    gradlePluginPortal()
     mavenCentral()
 }
 
@@ -17,7 +22,7 @@ javafx {
 }
 
 dependencies {
-	
+		
 	// Font Icons - Ikonli
 	implementation("org.kordamp.ikonli:ikonli-javafx:12.3.1")
 	implementation("org.kordamp.ikonli:ikonli-material2-pack:12.3.1")
@@ -35,6 +40,10 @@ dependencies {
 	
 }
 
+application {
+	mainClass = "io.azraein.eden.Main"
+}
+
 // Apply a specific Java toolchain to ease working on different environments.
 java {
     toolchain {
@@ -43,19 +52,15 @@ java {
 }
 
 tasks {
-    val uberJar by creating(Jar::class) {
+    val uberJar by creating(ShadowJar::class) {
         archiveClassifier.set("uber")
 
         from(sourceSets.main.get().output)
 
-        dependsOn(configurations.runtimeClasspath)
+		from(project.configurations.compileClasspath)
 
-        from({
-            configurations.runtimeClasspath.get()
-                    .filter { it.name.endsWith(".jar") }
-                    .map { zipTree(it) }
-        })
-        
+		mergeServiceFiles()
+
         duplicatesStrategy = DuplicatesStrategy.INCLUDE // Set the strategy to include duplicates
         
        	manifest {
@@ -64,7 +69,7 @@ tasks {
 		   }
         
     }
-
+	
     assemble {
         dependsOn(uberJar)
     }
