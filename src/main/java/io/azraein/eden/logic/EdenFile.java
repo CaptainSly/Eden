@@ -37,13 +37,21 @@ public class EdenFile extends Region {
 		fontIcon.setIconSize(32);
 		fontIcon.setTextAlignment(TextAlignment.CENTER);
 
-		Label fileName = new Label(edenFile.getName());
-		fileName.setAlignment(Pos.CENTER);
+		String fileName = edenFile.getName();
+		String fileExtension = "";
+		if (fileName.contains("."))
+			fileExtension = fileName.substring(fileName.length() - 4, fileName.length());
+
+		if (fileName.length() > 10)
+			fileName = fileName.substring(0, 10) + fileExtension;
+
+		Label fileNameLbl = new Label(fileName);
+		fileNameLbl.setAlignment(Pos.CENTER);
 
 		VBox box = new VBox();
 		box.setAlignment(Pos.CENTER);
 		box.setPadding(new Insets(5));
-		box.getChildren().addAll(fontIcon, fileName);
+		box.getChildren().addAll(fontIcon, fileNameLbl);
 
 		getChildren().add(box);
 	}

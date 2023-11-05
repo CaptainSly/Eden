@@ -7,6 +7,7 @@ import org.kordamp.desktoppanefx.scene.layout.DesktopPane;
 import org.kordamp.desktoppanefx.scene.layout.InternalWindow;
 import org.kordamp.ikonli.javafx.FontIcon;
 import org.kordamp.ikonli.material2.Material2AL;
+import org.kordamp.ikonli.material2.Material2MZ;
 import org.kordamp.ikonli.material2.Material2RoundAL;
 import org.kordamp.ikonli.material2.Material2RoundMZ;
 import org.tinylog.Logger;
@@ -22,22 +23,30 @@ import javafx.collections.ListChangeListener;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.Slider;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.Tooltip;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
+import javafx.scene.media.MediaView;
 
 public class EdenDesktop extends EdenScene {
 
 	private DesktopPane desktopPane;
 	private StatusBar desktopStatusBar;
+	private FlowPane directoryFlowPane;
 	private VBox desktopDockBox;
 
 	private InternalWindow edenFileBrowser;
-	private int internalTextEditorCap = 0;
+	private int internalCount = 0;
 
 	public EdenDesktop(EdenApp edenSceneView) {
 		super(edenSceneView);
@@ -64,6 +73,13 @@ public class EdenDesktop extends EdenScene {
 		fileBrowserIcon.setIconSize(16);
 		fileBrowserBtn.setGraphic(fileBrowserIcon);
 		fileBrowserBtn.setOnAction(e -> {
+			// TODO: Figure out how to bring the filebrowser back using the original window
+			InternalWindow w = new InternalWindow("window-edenFileBrowser_" + internalCount++,
+					FontIcon.of(Material2AL.FOLDER), "Eden FileBrowser", getFileBrowserContent());
+			desktopPane.addInternalWindow(w);
+			directoryFlowPane.getChildren().clear();
+			addEdenFilesToBrowser(directoryFlowPane,
+					EdenFileUtils.getUserDirectoryFiles(edenSceneLogic.getCurrentLoggedInUser()));
 		});
 
 		windowBtnHBox.getChildren().add(fileBrowserBtn);
@@ -114,9 +130,12 @@ public class EdenDesktop extends EdenScene {
 
 	private BorderPane getFileBrowserContent() {
 		BorderPane fbRoot = new BorderPane();
-		FlowPane dirFlowPane = new FlowPane();
-		ScrollPane scrollpane = new ScrollPane(dirFlowPane);
-		dirFlowPane.setPadding(new Insets(25));
+		directoryFlowPane = new FlowPane();
+		ScrollPane scrollpane = new ScrollPane(directoryFlowPane);
+		fbRoot.setMaxWidth(640);
+		fbRoot.setMaxHeight(480);
+
+		directoryFlowPane.setPadding(new Insets(25));
 
 		edenSceneLogic.getCurrentEdenUser().addListener(new ChangeListener<EdenUser>() {
 
@@ -124,18 +143,18 @@ public class EdenDesktop extends EdenScene {
 			public void changed(ObservableValue<? extends EdenUser> observable, EdenUser oldValue, EdenUser newValue) {
 
 				if (newValue == null) {
-					dirFlowPane.getChildren().clear();
+					directoryFlowPane.getChildren().clear();
 				} else {
 					// It's not null fill the pane
-					dirFlowPane.getChildren().clear();
-					addEdenFilesToBrowser(dirFlowPane,
+					directoryFlowPane.getChildren().clear();
+					addEdenFilesToBrowser(directoryFlowPane,
 							EdenFileUtils.getUserDirectoryFiles(edenSceneLogic.getCurrentLoggedInUser()));
 				}
 
 			}
 		});
 
-		dirFlowPane.getChildren().addListener(new ListChangeListener<Node>() {
+		directoryFlowPane.getChildren().addListener(new ListChangeListener<Node>() {
 
 			@Override
 			public void onChanged(Change<? extends Node> c) {
@@ -147,12 +166,30 @@ public class EdenDesktop extends EdenScene {
 								newEdenFile.setOnMouseClicked(event -> {
 									switch (newEdenFile.getEdenFileType()) {
 									case FILE:
-										InternalWindow textWindow = createTextEditorWindow(newEdenFile);
-										desktopPane.addInternalWindow(textWindow);
+										// Time to figure out what type of file.
+										// Check to see if file has extension.
+										String fileName = newEdenFile.getEdenFile().getName();
+										if (fileName.contains(".")) {
+											// Chances are we have an extension at the end.
+											int fileNameLength = fileName.length();
+											String fileExtension = fileName.substring(fileNameLength - 4,
+													fileNameLength);
+											if (fileExtension.equals(".txt")) {
+												desktopPane.addInternalWindow(createTextEditorWindow(newEdenFile));
+											} else if (fileExtension.equals(".mp3")) {
+												desktopPane.addInternalWindow(createAudioMediaWindow(newEdenFile));
+											} else if (fileExtension.equals(".mp4")) {
+												desktopPane.addInternalWindow(createVideoMediaWindow(newEdenFile));
+											} else if (fileExtension.equals(".jpg") || fileExtension.equals(".png")) {
+												desktopPane.addInternalWindow(createImageMediaWindow(newEdenFile));
+											}
+
+										} else
+											desktopPane.addInternalWindow(createTextEditorWindow(newEdenFile));
 										break;
 									case FOLDER:
-										dirFlowPane.getChildren().clear();
-										addEdenFilesToBrowser(dirFlowPane, newEdenFile.getEdenFile().listFiles());
+										directoryFlowPane.getChildren().clear();
+										addEdenFilesToBrowser(directoryFlowPane, newEdenFile.getEdenFile().listFiles());
 										break;
 									}
 								});
@@ -166,8 +203,8 @@ public class EdenDesktop extends EdenScene {
 		Button homeButton = new Button();
 		homeButton.setGraphic(FontIcon.of(Material2AL.HOME));
 		homeButton.setOnAction(event -> {
-			dirFlowPane.getChildren().clear();
-			addEdenFilesToBrowser(dirFlowPane,
+			directoryFlowPane.getChildren().clear();
+			addEdenFilesToBrowser(directoryFlowPane,
 					EdenFileUtils.getUserDirectoryFiles(edenSceneLogic.getCurrentLoggedInUser()));
 		});
 
@@ -176,14 +213,108 @@ public class EdenDesktop extends EdenScene {
 		return fbRoot;
 	}
 
+	public InternalWindow createImageMediaWindow(EdenFile edenFile) {
+		ImageView imageView = new ImageView(new Image(edenFile.getEdenFile().toURI().toString()));
+		ScrollPane scrollPane = new ScrollPane(imageView);
+		
+		InternalWindow w = new InternalWindow("edenImageWindow_" + internalCount++,
+				FontIcon.of(Material2AL.IMAGE), "Eden ImageViewer - " + edenFile.getEdenFile().getName(), scrollPane);
+		
+		return w;
+	}
+
+	public InternalWindow createAudioMediaWindow(EdenFile edenFile) {
+		Media media = new Media(edenFile.getEdenFile().toURI().toString());
+		MediaPlayer mediaPlayer = new MediaPlayer(media);
+
+		mediaPlayer.setAutoPlay(true);
+
+		Slider volumeSlider = new Slider(0, 1, 0.1);
+		volumeSlider.setValue(0.25f);
+		mediaPlayer.volumeProperty().bind(volumeSlider.valueProperty());
+
+		VBox box = new VBox();
+
+		Label mediaLbl = new Label(edenFile.getEdenFile().getName());
+		mediaLbl.setGraphic(FontIcon.of(Material2AL.AUDIOTRACK));
+
+		HBox audioButtons = new HBox();
+
+		Button playAudio = new Button();
+		playAudio.setGraphic(FontIcon.of(Material2MZ.PLAY_ARROW));
+		playAudio.setOnAction(event -> mediaPlayer.play());
+
+		Button pauseAudio = new Button();
+		pauseAudio.setGraphic(FontIcon.of(Material2MZ.PAUSE_CIRCLE_FILLED));
+		pauseAudio.setOnAction(event -> mediaPlayer.pause());
+
+		audioButtons.getChildren().addAll(playAudio, pauseAudio);
+
+		box.getChildren().addAll(mediaLbl, audioButtons, volumeSlider);
+
+		InternalWindow mediaWindow = new InternalWindow("edenMediaWindow_" + internalCount++,
+				FontIcon.of(Material2AL.AUDIOTRACK), "Eden MediaPlayer - " + edenFile.getEdenFile().getName(), box);
+
+		mediaWindow.setOnCloseRequest(event -> {
+			mediaPlayer.stop();
+		});
+
+		return mediaWindow;
+	}
+
+	public InternalWindow createVideoMediaWindow(EdenFile edenFile) {
+		Media media = new Media(edenFile.getEdenFile().toURI().toString());
+		MediaPlayer mediaPlayer = new MediaPlayer(media);
+		MediaView mediaView = new MediaView(mediaPlayer);
+
+		mediaPlayer.setAutoPlay(true);
+
+		mediaView.fitWidthProperty().set(640);
+		mediaView.fitHeightProperty().set(480);
+
+		// Media Controls
+		Slider volumeSlider = new Slider(0, 1, 0.1);
+		volumeSlider.setValue(0.25f);
+		mediaPlayer.volumeProperty().bind(volumeSlider.valueProperty());
+
+		Slider durationSlider = new Slider();
+
+		HBox volumeBox = new HBox();
+		HBox durationBox = new HBox();
+
+		volumeBox.getChildren().addAll(new Label("Volume: "), volumeSlider);
+		durationBox.getChildren().addAll(new Label("Time: "), durationSlider);
+
+		Button playVideo = new Button();
+		playVideo.setGraphic(FontIcon.of(Material2MZ.PLAY_ARROW));
+		playVideo.setOnAction(event -> mediaPlayer.play());
+
+		Button pauseVideo = new Button();
+		pauseVideo.setGraphic(FontIcon.of(Material2MZ.PAUSE_CIRCLE_FILLED));
+		pauseVideo.setOnAction(event -> mediaPlayer.pause());
+
+		HBox controlBox = new HBox();
+		controlBox.getChildren().addAll(playVideo, pauseVideo);
+
+		VBox mainBox = new VBox();
+		mainBox.getChildren().addAll(mediaView, volumeBox, durationBox, controlBox);
+
+		InternalWindow w = new InternalWindow("eden_videoMediaWindow_" + internalCount++,
+				FontIcon.of(Material2AL.FEATURED_VIDEO), "Eden VideoPlayer - " + edenFile.getEdenFile().getName(),
+				mainBox);
+
+		w.setOnCloseRequest(event -> mediaPlayer.stop());
+
+		return w;
+	}
+
 	public InternalWindow createTextEditorWindow(EdenFile edenFile) {
 		String textContent = EdenFileUtils.getFileAsString(edenFile.getEdenFile());
 		TextArea textEditor = new TextArea();
-		textEditor.setMaxSize(600, 600);
 		textEditor.setText(textContent);
 		textEditor.setWrapText(true);
 
-		InternalWindow textWindow = new InternalWindow("edenTextEditor_" + internalTextEditorCap++,
+		InternalWindow textWindow = new InternalWindow("edenTextEditor_" + internalCount++,
 				FontIcon.of(Material2AL.FILE_COPY), "Eden TextEditor - " + edenFile.getEdenFile().getName(),
 				textEditor);
 

@@ -12,7 +12,7 @@ repositories {
 javafx {
 	
 	version = "21.0.1"
-	modules = listOf("javafx.controls")
+	modules = listOf("javafx.controls", "javafx.media")
 	
 }
 

@@ -9,6 +9,8 @@ A prop for modern homebrewed Call of Cthulhu/Delta Green games. If your campaign
 
 *Until this link goes to an actual page, this is a WIP
 
+Any bugs that arise during development will be documented in the [Bugs](Bugs.md) file. I have a header at the top that details on how I'll lay them out if and when I find them. I'm also going to attempt to document what I change when I do it inside the [Changelog](ChangeLog.md) file.
+
 ## AnzelElectronics Pitch
 
 We at AnzelElectronics take pride in our employees, and we realize that using tech from yesteryears supplies a myriad of problems! So we've developed the newest Employee Portal Program for use here at AnzelElectronics! Eden! Eden will allow you to keep in touch with your fellow employees while still getting your work done! Eden is to be used starting immediately at all AnzelElectronics offices! 
@@ -17,11 +19,16 @@ We at AnzelElectronics take pride in our employees, and we realize that using te
 ## Getting Started
 
 Eden was written with JDK21 and the following libraries:
+
 * [JavaFX](https://openjfx.io/openjfx-docs/#introduction) - 21.0.1
 * [DesktopPaneFX](https://github.com/kordamp/desktoppanefx) - 0.15.0
 * [TinyLog2](https://tinylog.org/v2/) - 2.6.2
 * [ControlsFX](https://central.sonatype.com/artifact/org.controlsfx/controlsfx) - 11.1.2
 * [IkonliFX](https://github.com/kordamp/ikonli/) - 12.3.1
+* [Gradle](https://gradle.org) - 8.4
+
+
+When you pull the project off github, import it as a gradle project into whichever IDE you decide, it should then pull whatever dependencies it needs from maven and then you can run it by launching the Main.java file located in the io.azraein.eden package.
 
 ### Running
 
@@ -41,6 +48,3 @@ Contributors names and contact info
 ## License
 
 This project is licensed under the GNU GPLv3 License - see the [LICENSE.md](LICENSE.md) file for details
-
-## Acknowledgments
-
