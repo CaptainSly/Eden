@@ -7,9 +7,6 @@ plugins {
 repositories {
     // Use Maven Central for resolving dependencies.
     mavenCentral()
-    maven {
-        url = uri("https://oss.sonatype.org/content/repositories/snapshots/")
-    }
 }
 
 javafx {
@@ -35,8 +32,6 @@ dependencies {
 	// DesktopPaneFX
 	implementation("org.kordamp.desktoppanefx:desktoppanefx-core:0.15.0")
 	
-	// LiveDirs
-	implementation("org.fxmisc.livedirs:livedirsfx:1.0.0-SNAPSHOT")
 	
 }
 

@@ -63,7 +63,8 @@ public class EdenDesktop extends EdenScene {
 		FontIcon fileBrowserIcon = FontIcon.of(Material2AL.FILE_COPY);
 		fileBrowserIcon.setIconSize(16);
 		fileBrowserBtn.setGraphic(fileBrowserIcon);
-		fileBrowserBtn.setOnAction(e -> edenFileBrowser.toFront());
+		fileBrowserBtn.setOnAction(e -> {
+		});
 
 		windowBtnHBox.getChildren().add(fileBrowserBtn);
 
