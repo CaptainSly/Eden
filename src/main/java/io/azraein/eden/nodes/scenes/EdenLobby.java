@@ -148,6 +148,19 @@ public class EdenLobby extends EdenScene {
 
 		});
 
+		edenSceneLogic.getCurrentEdenUser().addListener((obs, oldValue, newValue) -> {
+
+			if (newValue == null) {
+				logOut.setDisable(true);
+				logIn.setDisable(false);
+				logOut.setText("Logout of Eden");
+			} else {
+				logOut.setDisable(false);
+				logIn.setDisable(true);
+			}
+
+		});
+
 		logOut.setGraphic(logoutIcon);
 		logOut.setOnAction(e -> {
 			edenSceneLogic.setCurrentLoggedInUser(null);

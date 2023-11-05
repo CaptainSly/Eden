@@ -1,6 +1,6 @@
 plugins {
-    // Apply the java-library plugin for API and implementation separation.
     java
+    application
     id("org.openjfx.javafxplugin") version "0.1.0"
 }
 
@@ -39,5 +39,33 @@ dependencies {
 java {
     toolchain {
         languageVersion.set(JavaLanguageVersion.of(21))
+    }
+}
+
+tasks {
+    val uberJar by creating(Jar::class) {
+        archiveClassifier.set("uber")
+
+        from(sourceSets.main.get().output)
+
+        dependsOn(configurations.runtimeClasspath)
+
+        from({
+            configurations.runtimeClasspath.get()
+                    .filter { it.name.endsWith(".jar") }
+                    .map { zipTree(it) }
+        })
+        
+        duplicatesStrategy = DuplicatesStrategy.INCLUDE // Set the strategy to include duplicates
+        
+       	manifest {
+			   attributes["Manifest-Version"] = "1.0"
+			   attributes["Main-Class"] = "io.azraein.eden.Main"
+		   }
+        
+    }
+
+    assemble {
+        dependsOn(uberJar)
     }
 }

@@ -4,6 +4,7 @@ import java.io.File;
 
 import org.kordamp.ikonli.javafx.FontIcon;
 import org.kordamp.ikonli.material2.Material2OutlinedAL;
+import org.kordamp.ikonli.material2.Material2RoundAL;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -25,10 +26,27 @@ public class EdenFile extends Region {
 		this.edenFile = edenFile;
 		this.edenFileType = edenFileType;
 
+		String fileName = edenFile.getName();
+		String fileExtension = "";
+		if (fileName.contains("."))
+			fileExtension = fileName.substring(fileName.length() - 4, fileName.length());
+
 		FontIcon fontIcon = null;
 		switch (this.edenFileType) {
 		case FILE:
-			fontIcon = FontIcon.of(Material2OutlinedAL.FILE_COPY);
+			// TODO: Choose the icon based on the extension
+			
+			if (fileExtension.equals(".txt"))
+				fontIcon = FontIcon.of(Material2RoundAL.FILE_COPY);
+			else if (fileExtension.equals(".png") || fileExtension.equals(".jpg"))
+				fontIcon = FontIcon.of(Material2OutlinedAL.IMAGE);
+			else if (fileExtension.equals(".mp3"))
+				fontIcon = FontIcon.of(Material2OutlinedAL.AUDIOTRACK);
+			else if (fileExtension.equals(".mp4"))
+				fontIcon = FontIcon.of(Material2OutlinedAL.FEATURED_VIDEO);
+			else 
+				fontIcon = FontIcon.of(Material2OutlinedAL.FILE_COPY);
+			
 			break;
 		case FOLDER:
 			fontIcon = FontIcon.of(Material2OutlinedAL.FOLDER);
@@ -36,11 +54,6 @@ public class EdenFile extends Region {
 		}
 		fontIcon.setIconSize(32);
 		fontIcon.setTextAlignment(TextAlignment.CENTER);
-
-		String fileName = edenFile.getName();
-		String fileExtension = "";
-		if (fileName.contains("."))
-			fileExtension = fileName.substring(fileName.length() - 4, fileName.length());
 
 		if (fileName.length() > 10)
 			fileName = fileName.substring(0, 10) + fileExtension;

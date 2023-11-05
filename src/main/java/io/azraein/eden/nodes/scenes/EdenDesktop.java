@@ -254,7 +254,7 @@ public class EdenDesktop extends EdenScene {
 
 		InternalWindow mediaWindow = new InternalWindow("edenMediaWindow_" + internalCount++,
 				FontIcon.of(Material2AL.AUDIOTRACK), "Eden MediaPlayer - " + edenFile.getEdenFile().getName(), box);
-
+		
 		mediaWindow.setOnCloseRequest(event -> {
 			mediaPlayer.stop();
 		});
@@ -313,11 +313,11 @@ public class EdenDesktop extends EdenScene {
 		TextArea textEditor = new TextArea();
 		textEditor.setText(textContent);
 		textEditor.setWrapText(true);
-
+		
 		InternalWindow textWindow = new InternalWindow("edenTextEditor_" + internalCount++,
 				FontIcon.of(Material2AL.FILE_COPY), "Eden TextEditor - " + edenFile.getEdenFile().getName(),
 				textEditor);
-
+		
 		textWindow.setOnCloseRequest(event -> {
 			// Save the file
 			Logger.debug("Test");

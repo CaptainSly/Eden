@@ -9,6 +9,12 @@ A prop for modern homebrewed Call of Cthulhu/Delta Green games. If your campaign
 
 *Until this link goes to an actual page, this is a WIP
 
+
+![Eden Lobby](edenImage.png)
+
+![Eden Desktop](edenDesktop.png)
+
+
 Any bugs that arise during development will be documented in the [Bugs](Bugs.md) file. I have a header at the top that details on how I'll lay them out if and when I find them. I'm also going to attempt to document what I change when I do it inside the [Changelog](ChangeLog.md) file.
 
 ## AnzelElectronics Pitch
@@ -32,7 +38,7 @@ When you pull the project off github, import it as a gradle project into whichev
 
 ### Running
 
-* Make sure to go into the EdenFileUtils.java inside of the io.azraein.eden.logic package, and change the EDEN_FILE_LOCATION variable to a location somewhere on your filesystem. The Program should then run in an IDE afterwards. 
+* Make sure to go into the EdenFileUtils.java inside of the io.azraein.eden.logic package, and change the [EDEN_FILE_LOCATION](https://github.com/CaptainSly/Eden/blob/9a31b7a99e5d39c67d41a057821f2c94e15a5553/src/main/java/io/azraein/eden/logic/EdenFileUtils.java#L11C2-L11C78) variable to a location somewhere on your filesystem. The Program should then run in an IDE afterwards. 
 
 ## Authors
 
