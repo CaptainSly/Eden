@@ -8,10 +8,18 @@ plugins {
     id("com.github.johnrengelman.shadow") version "7.0.0"
 }
 
-repositories {
+repositories { 
     // Use Maven Central for resolving dependencies.
     gradlePluginPortal()
     mavenCentral()
+    
+    //Jitpack.io
+    maven { url = uri("https://jitpack.io") }
+    
+    flatDir {
+		dirs("libs")
+	}
+    
 }
 
 javafx {
@@ -36,8 +44,12 @@ dependencies {
 	
 	// DesktopPaneFX
 	implementation("org.kordamp.desktoppanefx:desktoppanefx-core:0.15.0")
-	
-	
+
+	implementation(
+		fileTree("libs/") {
+			include("*.jar")
+		}
+	)
 }
 
 application {
@@ -53,7 +65,8 @@ java {
 
 tasks {
     val uberJar by creating(ShadowJar::class) {
-        archiveClassifier.set("uber")
+        archiveClassifier.set("release")
+        archiveVersion.set("0.0.1")
 
         from(sourceSets.main.get().output)
 

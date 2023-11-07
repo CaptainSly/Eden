@@ -3,7 +3,7 @@ package io.azraein.eden;
 import java.util.HashMap;
 import java.util.Map;
 
-import io.azraein.eden.logic.Eden;
+import io.azraein.eden.logic.eden.Eden;
 import io.azraein.eden.nodes.scenes.EdenDesktop;
 import io.azraein.eden.nodes.scenes.EdenLobby;
 import io.azraein.eden.nodes.scenes.EdenMessaging;
@@ -11,7 +11,10 @@ import io.azraein.eden.nodes.scenes.EdenNews;
 import io.azraein.eden.nodes.scenes.EdenScene;
 import io.azraein.eden.nodes.scenes.EdenSettingsScene;
 import javafx.application.Application;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.Scene;
+import javafx.scene.layout.Region;
 import javafx.stage.Stage;
 
 public class EdenApp extends Application {
@@ -19,11 +22,14 @@ public class EdenApp extends Application {
 	private Stage edenAppStage;
 	private Eden eden;
 
+	private final ObjectProperty<EdenScene> edenSceneProperty = new SimpleObjectProperty<>();
+
 	private final Map<String, EdenScene> EDEN_SCENES = new HashMap<>();
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		eden = new Eden();
+		edenAppStage = primaryStage;
 
 		EdenLobby lobby = new EdenLobby(this);
 		EdenMessaging messaging = new EdenMessaging(this);
@@ -44,15 +50,22 @@ public class EdenApp extends Application {
 			}
 		});
 
-		edenAppStage = primaryStage;
-
-		primaryStage.setScene(new Scene(EDEN_SCENES.get("lobby").getRootPane(), 1280, 720));
+		primaryStage.setScene(new Scene(new Region(), 1280, 720));
 		primaryStage.setTitle("AnzelElectronics Eden");
 		primaryStage.show();
+
+		primaryStage.setOnCloseRequest(e -> {
+			eden.getEdensMouth().stopTalking();
+			// TODO: If anything needs to be deallocated in one way or another do so here
+			// before the program closes
+		});
+
+		setScene(EDEN_SCENES.get("lobby"));
 	}
 
 	public void setScene(EdenScene scene) {
 		edenAppStage.getScene().setRoot(scene.getRootPane());
+		edenSceneProperty.set(scene);
 	}
 
 	public Eden getEden() {
@@ -65,6 +78,10 @@ public class EdenApp extends Application {
 
 	public Map<String, EdenScene> getEdenScenes() {
 		return EDEN_SCENES;
+	}
+
+	public ObjectProperty<EdenScene> getEdenSceneProperty() {
+		return edenSceneProperty;
 	}
 
 }

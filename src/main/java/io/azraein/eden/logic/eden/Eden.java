@@ -1,8 +1,10 @@
-package io.azraein.eden.logic;
+package io.azraein.eden.logic.eden;
 
 import java.util.HashMap;
 import java.util.Map;
 
+import io.azraein.eden.logic.EdenAccountType;
+import io.azraein.eden.logic.EdenUser;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 
@@ -12,8 +14,13 @@ public class Eden {
 
 	private final ObjectProperty<EdenUser> currentEdenUser = new SimpleObjectProperty<>(null);
 
+	// Eden's Parts
+	private EdenMouth edensMouth; // Eden will never be silenced
+
 	public Eden() {
 		edenUsers = new HashMap<>();
+
+		edensMouth = new EdenMouth();
 
 		{
 			// Create Dummy Users
@@ -24,8 +31,6 @@ public class Eden {
 			EdenUser userAlice = new EdenUser("aliceFar42", "tacobell4lyfe", EdenAccountType.USER);
 			EdenUser userBill = new EdenUser("billClasp62", "dontuseme", EdenAccountType.USER);
 
-			
-			
 			// Put them in lists
 			edenUsers.put(userTed.getUserEmployeeNumber(), userTed);
 			edenUsers.put(userMax.getUserEmployeeNumber(), userMax);
@@ -34,10 +39,11 @@ public class Eden {
 			edenUsers.put(userAlice.getUserEmployeeNumber(), userAlice);
 			edenUsers.put(userBill.getUserEmployeeNumber(), userBill);
 		}
-		
-		for (EdenUser user : edenUsers.values())
-			EdenFileUtils.createEdenUser(user);
 
+	}
+
+	public void speak(String text) {
+		edensMouth.speak(text);
 	}
 
 	public void setCurrentLoggedInUser(EdenUser edenUser) {
@@ -67,6 +73,10 @@ public class Eden {
 
 	public ObjectProperty<EdenUser> getCurrentEdenUser() {
 		return currentEdenUser;
+	}
+
+	public EdenMouth getEdensMouth() {
+		return edensMouth;
 	}
 
 }

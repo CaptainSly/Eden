@@ -95,8 +95,13 @@ public class EdenFileUtils {
 	}
 
 	public static File[] getUserDirectoryFiles(EdenUser edenUser) {
-		File file = new File(EDEN_FILE_LOCATION + "employees/" + edenUser.getUserName());
-		return file.listFiles();
+		File file;
+
+		if (edenUser != null) {
+			file = new File(EDEN_FILE_LOCATION + "employees/" + edenUser.getUserName());
+			return file.listFiles();
+		} else
+			return null;
 	}
 
 	private static String getEdenUserAsString(EdenUser edenUser) {
