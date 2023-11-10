@@ -21,10 +21,10 @@ public class EdenApp extends Application {
 
 	private Stage edenAppStage;
 	private Eden eden;
-
 	private final ObjectProperty<EdenScene> edenSceneProperty = new SimpleObjectProperty<>();
-
 	private final Map<String, EdenScene> EDEN_SCENES = new HashMap<>();
+
+	// TODO: Create Custom StyleSheets for Eden
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
@@ -55,9 +55,9 @@ public class EdenApp extends Application {
 		primaryStage.show();
 
 		primaryStage.setOnCloseRequest(e -> {
-			eden.getEdensMouth().stopTalking();
 			// TODO: If anything needs to be deallocated in one way or another do so here
 			// before the program closes
+			eden.getEdensMouth().stopTalking();
 		});
 
 		setScene(EDEN_SCENES.get("lobby"));

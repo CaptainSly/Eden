@@ -1,4 +1,4 @@
-package io.azraein.eden;
+package io.azraein.eden.utils;
 
 import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;

@@ -1,10 +1,13 @@
-package io.azraein.eden.logic;
+package io.azraein.eden.utils;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+
+import io.azraein.eden.logic.EdenAccountType;
+import io.azraein.eden.logic.EdenUser;
 
 public class EdenFileUtils {
 

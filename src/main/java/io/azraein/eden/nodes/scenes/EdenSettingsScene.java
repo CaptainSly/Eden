@@ -1,5 +1,9 @@
 package io.azraein.eden.nodes.scenes;
 
+import java.util.Random;
+
+import org.tinylog.Logger;
+
 import io.azraein.eden.EdenApp;
 import javafx.geometry.Insets;
 import javafx.scene.control.CheckBox;
@@ -16,8 +20,16 @@ public class EdenSettingsScene extends EdenScene {
 		CheckBox edenToggle = new CheckBox();
 		edenToggle.setDisable(true);
 		edenToggle.setSelected(true);
-		
-		
+
+		edenToggleLbl.setOnMouseClicked(e -> {
+			Random rnJesus = new Random(System.currentTimeMillis());
+			int randomChance = rnJesus.nextInt(69);
+
+			Logger.info("RandomChance: " + randomChance);
+			
+			if (randomChance == 42)
+				edenSceneView.getEden().speak("Why must you keep trying?");
+		});
 
 		// Control Panes
 		GridPane settingsGrid = new GridPane();

@@ -8,8 +8,8 @@ import org.kordamp.ikonli.material2.Material2RoundAL;
 import org.tinylog.Logger;
 
 import io.azraein.eden.EdenApp;
-import io.azraein.eden.EdenUtils;
 import io.azraein.eden.logic.EdenUser;
+import io.azraein.eden.utils.EdenUtils;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.scene.Node;

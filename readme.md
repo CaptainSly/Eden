@@ -31,6 +31,7 @@ Eden was written with JDK21 and the following libraries:
 * [TinyLog2](https://tinylog.org/v2/) - 2.6.2
 * [ControlsFX](https://central.sonatype.com/artifact/org.controlsfx/controlsfx) - 11.1.2
 * [IkonliFX](https://github.com/kordamp/ikonli/) - 12.3.1
+* [jAdapter4NativeTTS](https://github.com/jonelo/jAdapterForNativeTTS) 0.12.0
 * [Gradle](https://gradle.org) - 8.4
 
 

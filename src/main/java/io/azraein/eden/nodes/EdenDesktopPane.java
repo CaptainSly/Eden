@@ -9,10 +9,10 @@ import org.kordamp.ikonli.material2.Material2AL;
 import org.kordamp.ikonli.material2.Material2MZ;
 
 import io.azraein.eden.EdenApp;
-import io.azraein.eden.EdenUtils;
 import io.azraein.eden.logic.EdenFile;
 import io.azraein.eden.logic.EdenFile.EdenFileType;
-import io.azraein.eden.logic.EdenFileUtils;
+import io.azraein.eden.utils.EdenFileUtils;
+import io.azraein.eden.utils.EdenUtils;
 import javafx.application.Platform;
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
@@ -38,7 +38,6 @@ public class EdenDesktopPane {
 
 	private DesktopPane edenDesktopPane;
 
-	@SuppressWarnings("unused")
 	private EdenApp edenApp;
 
 	public EdenDesktopPane(EdenApp edenApp) {
@@ -103,9 +102,9 @@ public class EdenDesktopPane {
 				@Override
 				public void onChanged(Change<? extends Node> c) {
 
-					while (c.next()) {
-						if (c.wasAdded()) {
-							for (Node node : c.getAddedSubList()) {
+					while (c.next())
+						if (c.wasAdded())
+							for (Node node : c.getAddedSubList())
 								if (node instanceof EdenFile) {
 
 									EdenFile newEdenFile = (EdenFile) node;
@@ -120,9 +119,6 @@ public class EdenDesktopPane {
 										}
 									});
 								}
-							}
-						}
-					}
 
 				}
 
@@ -238,6 +234,8 @@ public class EdenDesktopPane {
 			// Create the Media HBox and Control GridPane
 			HBox mediaHBox = new HBox();
 			mediaHBox.setAlignment(Pos.CENTER);
+			mediaHBox.setPadding(new Insets(10));
+			mediaHBox.setSpacing(25);
 
 			GridPane mediaControlGrid = new GridPane();
 			mediaControlGrid.setHgap(5);
@@ -283,6 +281,15 @@ public class EdenDesktopPane {
 					if (mediaTimeSlider.isPressed())
 						mediaPlayer
 								.seek(mediaPlayer.getMedia().getDuration().multiply(mediaTimeSlider.getValue() / 100));
+				}
+
+			});
+
+			edenApp.getEden().getCurrentEdenUser().addListener((obs, oldValue, newValue) -> {
+
+				if (newValue == null) {
+					// Logout
+					mediaPlayer.stop();
 				}
 
 			});
@@ -431,6 +438,15 @@ public class EdenDesktopPane {
 					if (mediaTimeSlider.isPressed())
 						mediaPlayer
 								.seek(mediaPlayer.getMedia().getDuration().multiply(mediaTimeSlider.getValue() / 100));
+				}
+
+			});
+
+			edenApp.getEden().getCurrentEdenUser().addListener((obs, oldValue, newValue) -> {
+
+				if (newValue == null) {
+					// Logout
+					mediaPlayer.stop();
 				}
 
 			});

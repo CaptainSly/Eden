@@ -9,13 +9,13 @@ public class EdenMessaging extends EdenScene {
 
 	private TabPane edenMessagerTabPane;
 
-	public EdenMessaging(EdenApp edenSceneView) {
-		super(edenSceneView);
+	public EdenMessaging(EdenApp edenApp) {
+		super(edenApp);
 		edenMessagerTabPane = new TabPane();
 		EdenEmail emailTab = new EdenEmail();
-		EdenInstantMessaging imTab = new EdenInstantMessaging();
-	
-		edenMessagerTabPane.getTabs().addAll(emailTab, imTab);
+		EdenInstantMessaging imTab = new EdenInstantMessaging(edenApp);
+
+		edenMessagerTabPane.getTabs().addAll(imTab, emailTab);
 		setContent(edenMessagerTabPane);
 	}
 

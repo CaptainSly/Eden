@@ -2,7 +2,7 @@ package io.azraein.eden.logic;
 
 import java.util.Random;
 
-import io.azraein.eden.EdenUtils;
+import io.azraein.eden.utils.EdenUtils;
 
 public class EdenUser {
 
