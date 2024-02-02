@@ -1,5 +1,13 @@
 # Eden
 
+
+
+# NOTE 
+
+# THIS PROJECT IS BEING TRANSFERRED AND REWRITTEN INTO A NEW PROJECT CALLED The Aether Project. ONCE THE CLIENT HAS THE SAME FEATURES AS THIS ONE, IT'LL BE POSTED. LOOK HERE FOR A LINK
+
+
+
 Eden is a Call of Cthulhu Prop for games in the modern age. It allows for a person to login to an account, view their personal data and read messages/news. All this data is created by the user before hand. 
 
 ## Description
